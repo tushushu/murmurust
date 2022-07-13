@@ -1,0 +1,3 @@
+
+
+def finalize(hash: int) -> int: ...
