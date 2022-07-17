@@ -9,5 +9,10 @@
 Python binding of MurmurHash3 Rust implementation.
 
 
+## Requirements
+-  Python: 3.8+
+-  OS: Linux, MacOS and Windows
+
+
 ## Installation
 Run `pip install mmr3`
