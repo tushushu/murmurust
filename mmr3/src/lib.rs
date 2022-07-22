@@ -37,7 +37,7 @@ fn mmh3_32(key: &str, seed: u32) -> u32 {
         let mut k1: u32 = (data[i + 3].wrapping_shl(24)
             | data[i + 2].wrapping_shl(16)
             | data[i + 1].wrapping_shl(8)
-            | data[i + 0]) as u32;
+            | data[i]) as u32;
 
         k1 = k1.wrapping_mul(c1);
         k1 = k1.wrapping_shl(15) | k1.wrapping_shr(17);
@@ -49,29 +49,28 @@ fn mmh3_32(key: &str, seed: u32) -> u32 {
     }
 
     // Tail
-    let i = n_blocks * 4;
+    let tail_index = n_blocks * 4;
     let mut k1: u32 = 0;
     let tail_len = len & 3;
 
     if tail_len >= 3 {
-        k1 ^= (data[i + 2].wrapping_shl(16)) as u32;
+        k1 ^= (data[tail_index + 2] as u32).wrapping_shl(16);
     };
     if tail_len >= 2 {
-        k1 ^= (data[i + 1].wrapping_shl(8)) as u32;
+        k1 ^= (data[tail_index + 1] as u32).wrapping_shl(8);
     };
     if tail_len >= 1 {
-        k1 ^= (data[i + 0]) as u32;
+        k1 ^= data[tail_index] as u32;
     };
     if tail_len > 0 {
         k1 = k1.wrapping_mul(c1);
         k1 = k1.wrapping_shl(15) | k1.wrapping_shr(17);
         k1 = k1.wrapping_mul(c2);
         h1 ^= k1;
-    }
+    };
 
     // Finalization
-    h1 ^= len as u32;
-    h1 = fmix32(h1);
+    h1 = fmix32(h1 ^ len as u32);
     h1
 }
 
