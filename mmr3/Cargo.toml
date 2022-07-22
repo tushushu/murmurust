@@ -1,0 +1,16 @@
+[package]
+name = "mmr3"
+version = "0.1.0"
+authors = ["tushushu"]
+edition = "2018"
+
+[lib]
+name = "mmr3"
+crate-type = ["cdylib"]
+
+[dependencies.pyo3]
+version = "0.16.4"
+features = ["extension-module"]
+
+[package.metadata.maturin]
+python-source = "python"
