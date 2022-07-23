@@ -23,7 +23,7 @@ fn fmix64(hash: u64) -> u64 {
 }
 
 #[pyfunction]
-fn mmh3_32(key: &str, seed: u32) -> u32 {
+fn hash32(key: &str, seed: u32) -> u32 {
     let len = key.len();
     let data = key.as_bytes();
     let n_blocks = len / 4;
@@ -78,7 +78,7 @@ fn mmh3_32(key: &str, seed: u32) -> u32 {
 fn mmr3(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(fmix32, m)?)?;
     m.add_function(wrap_pyfunction!(fmix64, m)?)?;
-    m.add_function(wrap_pyfunction!(mmh3_32, m)?)?;
+    m.add_function(wrap_pyfunction!(hash32, m)?)?;
 
     Ok(())
 }

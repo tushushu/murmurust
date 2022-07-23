@@ -1,5 +1,5 @@
 import pytest
-from mmr3 import fmix32, fmix64, mmh3_32
+from mmr3 import fmix32, fmix64, hash32
 
 
 def _fmix32(hash):
@@ -93,4 +93,4 @@ def _hash32(key: str, seed: int):
     ],
 )
 def test_mmh3_32(key: str, seed: int) -> None:
-    assert mmh3_32(key, seed) == _hash32(key, seed)
+    assert hash32(key, seed) == _hash32(key, seed)
