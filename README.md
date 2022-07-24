@@ -18,3 +18,11 @@ Python binding of MurmurHash3 Rust implementation.
 
 ## Installation
 Run `pip install mmr3`
+
+
+## Examples
+```Python
+>>> import mmr3
+>>> mmr3.hash32('foo', seed=0)
+4138058784
+```
