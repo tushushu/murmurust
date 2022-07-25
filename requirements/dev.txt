@@ -1,4 +1,4 @@
--r common.txt
+-r bench.txt
 # A-Z
 flake8==4.0.1
 mypy==0.930

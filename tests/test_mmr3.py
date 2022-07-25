@@ -1,8 +1,9 @@
+import mmh3
 import pytest
 from mmr3 import fmix32, fmix64, hash32
 
 
-def _fmix32(hash):
+def _fmix32(hash: int) -> int:
     hash ^= hash >> 16
     hash = (hash * 0x85ebca6b) & 0xFFFFFFFF
     hash ^= hash >> 13
@@ -11,7 +12,7 @@ def _fmix32(hash):
     return hash
 
 
-def _fmix64(hash):
+def _fmix64(hash: int) -> int:
     hash ^= hash >> 33
     hash = (hash * 0xff51afd7ed558ccd) & 0xFFFFFFFFFFFFFFFF
     hash ^= hash >> 33
@@ -36,7 +37,7 @@ def test_fmix64(hash: int) -> None:
     assert fmix64(hash) == _fmix64(hash)
 
 
-def _hash32(key: str, seed: int):
+def _hash32(key: str, seed: int) -> int:
     data = key.encode()
     length = len(data)
     n_blocks = int(length / 4)
@@ -94,3 +95,4 @@ def _hash32(key: str, seed: int):
 )
 def test_mmh3_32(key: str, seed: int) -> None:
     assert hash32(key, seed) == _hash32(key, seed)
+    assert hash32(key, seed) == mmh3.hash(key, seed, False)
