@@ -22,7 +22,7 @@ fn fmix64(hash: u64) -> u64 {
     h
 }
 
-#[pyfunction]
+#[pyfunction(seed = "0")]
 fn hash32(key: &str, seed: u32) -> u32 {
     let len = key.len();
     let data = key.as_bytes();
