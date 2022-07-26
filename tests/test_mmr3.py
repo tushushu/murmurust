@@ -1,3 +1,5 @@
+from typing import Optional
+
 import mmh3
 import pytest
 from mmr3 import fmix32, fmix64, hash32
@@ -89,10 +91,16 @@ def _hash32(key: str, seed: int) -> int:
     [
         ('foo', 0),
         ('foo', 100),
+        ('foo', 0),
         ('bar', 0),
         ('baz', 0),
     ],
 )
-def test_mmh3_32(key: str, seed: int) -> None:
-    assert hash32(key, seed) == _hash32(key, seed)
-    assert hash32(key, seed) == mmh3.hash(key, seed, False)
+def test_hash2(key: str, seed: Optional[int]) -> None:
+    if seed is None:
+        result = hash32(key)
+        seed = 0
+    else:
+        result = hash32(key, seed)
+    assert result == _hash32(key, seed)
+    assert result == mmh3.hash(key, seed, False)
