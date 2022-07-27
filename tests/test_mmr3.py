@@ -127,7 +127,7 @@ def test_hash2(
     seed: Optional[int],
     signed: Optional[bool],
 ) -> None:
-    kwargs: Dict[Any] = {"key": key}
+    kwargs: Dict[str, Any] = {"key": key}
     if seed is None:
         seed = 0
     else:
