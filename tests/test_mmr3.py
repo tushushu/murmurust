@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Dict, Optional
 
 import mmh3
 import pytest
@@ -39,7 +39,7 @@ def test_fmix64(hash: int) -> None:
     assert fmix64(hash) == _fmix64(hash)
 
 
-def _hash32(key: str, seed: int) -> int:
+def _hash32(key: str, seed: int, signed: bool) -> int:
     data = key.encode()
     length = len(data)
     n_blocks = int(length / 4)
@@ -83,24 +83,59 @@ def _hash32(key: str, seed: int) -> int:
 
     # Finalization
     result = _fmix32(h1 ^ length)
+    if signed:
+        if result & 0x80000000 == 0:
+            return result
+        else:
+            return -((result ^ 0xFFFFFFFF) + 1)
     return result
 
 
 @pytest.mark.parametrize(
-    'key, seed',
+    'key, seed, signed',
     [
-        ('foo', 0),
-        ('foo', 100),
-        ('foo', 0),
-        ('bar', 0),
-        ('baz', 0),
+        # key not None
+        ('foo', None, None),
+        ('bar', None, None),
+        ('baz', None, None),
+
+        # signed is None
+        ('foo', 0, None),
+        ('foo', 100, None),
+
+        # seed is None
+        ('foo', None, False),
+        ('foo', None, True),
+
+        # All not None
+        ('foo', 0, False),
+        ('foo', 0, True),
+        ('foo', 100, False),
+        ('foo', 100, True),
+        ('bar', 0, False),
+        ('bar', 0, True),
+        ('bar', 100, False),
+        ('bar', 100, True),
+        ('baz', 0, False),
+        ('baz', 0, True),
+        ('baz', 100, False),
+        ('baz', 100, True),
     ],
 )
-def test_hash2(key: str, seed: Optional[int]) -> None:
+def test_hash2(
+    key: str,
+    seed: Optional[int],
+    signed: Optional[bool],
+) -> None:
+    kwargs: Dict[Any] = {"key": key}
     if seed is None:
-        result = hash32(key)
         seed = 0
     else:
-        result = hash32(key, seed)
-    assert result == _hash32(key, seed)
-    assert result == mmh3.hash(key, seed, False)
+        kwargs["seed"] = seed
+    if signed is None:
+        signed = False
+    else:
+        kwargs["signed"] = signed
+    result = hash32(**kwargs)
+    assert result == _hash32(key, seed, signed)
+    assert result == mmh3.hash(key, seed, signed)
