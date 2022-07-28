@@ -22,8 +22,8 @@ fn fmix64(hash: u64) -> u64 {
     h
 }
 
-#[pyfunction(seed = "0")]
-fn hash32(key: &str, seed: u32) -> u32 {
+#[pyfunction(seed = "0", signed = "false")]
+fn hash32(_py: Python, key: &str, seed: u32, signed: bool) -> Py<PyAny> {
     let len = key.len();
     let data = key.as_bytes();
     let n_blocks = len / 4;
@@ -71,7 +71,11 @@ fn hash32(key: &str, seed: u32) -> u32 {
 
     // Finalization
     h1 = fmix32(h1 ^ len as u32);
-    h1
+    if signed {
+        (h1 as i32).to_object(_py)
+    } else {
+        h1.to_object(_py)
+    }
 }
 
 #[pymodule]

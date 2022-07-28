@@ -23,6 +23,15 @@ Run `pip install mmr3`
 ## Examples
 ```Python
 >>> import mmr3
->>> mmr3.hash32('foo', seed=0)
+# By default, seed=0, return unsigned int.
+>>> mmr3.hash32('foo')
 4138058784
+
+# When seed = 100.
+>>> mmr3.hash32('foo', seed=100)
+3757588558
+
+# Return signed int.
+>>> mmr3.hash32('foo', signed=True)
+-156908512
 ```
