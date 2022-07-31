@@ -1,3 +1,4 @@
 -r common.txt
 # A-Z
 mmh3==3.0.0
+mmr3==1.1.0
