@@ -99,11 +99,11 @@ class Benchmarker(ABC):
 
     There are 5 rounds for the task with different string sizes and number of
     runs:
-        XS - string size 1, run 100K times;
-        S - string size 10, run 100K times;
-        M - string size 100, run 10K times;
-        L - string size 1k, run 1K times;
-        XL - string size 10k, run 100 times.
+        XS - string length 1, run 1M times;
+        S - string length 10, run 1M times;
+        M - string length 100, run 100K times;
+        L - string length 1k, run 100K times;
+        XL - string length 10k, run 100K times.
 
     and the result of each round and the average result are both recorded.
 
@@ -115,7 +115,7 @@ class Benchmarker(ABC):
 
     def __init__(self) -> None:
         super().__init__()
-        self.n_runs = (100000, 100000, 10000, 1000, 100)
+        self.n_runs = (1000000, 1000000, 100000, 100000, 100000)
         self.sizes = (1, 10, 100, 1000, 10000)
         assert len(self.n_runs) == len(self.cases())
         assert len(self.__class__.__name__) < MAX_ITEM_LEN
