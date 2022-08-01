@@ -193,14 +193,14 @@ def display_info() -> None:
 
     try:
         print("mmr3 version:", mmr3.__version__, "  ")
-    except:
+    except:  # noqa: E722
         print("mmr3 version:", "unknown")
     print("mmh3 version:", mmh3.__version__, "  ")
     print(line)
     print()
 
 
-def display_result():
+def display_result() -> None:
     print("Result:")
     print()
     n_wins = 0
@@ -220,7 +220,7 @@ def display_result():
     print(f"{n_wins} of {total} tasks are faster!")
 
 
-def main():
+def main() -> None:
     """
     Comparing mmr3 and mmh3 performances, show the server info and output
     the result as Markdown Table.
