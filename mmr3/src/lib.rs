@@ -23,7 +23,7 @@ fn fmix64(hash: u64) -> u64 {
 }
 
 #[pyfunction(seed = "0", signed = "false")]
-fn hash32(_py: Python, key: &str, seed: u32, signed: bool) -> Py<PyAny> {
+unsafe fn hash32(_py: Python, key: &str, seed: u32, signed: bool) -> Py<PyAny> {
     let len = key.len();
     let data = key.as_bytes();
     let n_blocks = len / 4;
@@ -31,13 +31,12 @@ fn hash32(_py: Python, key: &str, seed: u32, signed: bool) -> Py<PyAny> {
 
     let c1: u32 = 0xcc9e2d51;
     let c2: u32 = 0x1b873593;
-
     // body
     for i in (0..n_blocks * 4).step_by(4) {
-        let mut k1: u32 = (data[i + 3].wrapping_shl(24)
-            | data[i + 2].wrapping_shl(16)
-            | data[i + 1].wrapping_shl(8)
-            | data[i]) as u32;
+        let mut k1: u32 = (data.get_unchecked(i + 3).wrapping_shl(24)
+            | data.get_unchecked(i + 2).wrapping_shl(16)
+            | data.get_unchecked(i + 1).wrapping_shl(8)
+            | data.get_unchecked(i)) as u32;
 
         k1 = k1.wrapping_mul(c1);
         k1 = k1.wrapping_shl(15) | k1.wrapping_shr(17);
