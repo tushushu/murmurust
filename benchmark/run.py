@@ -78,7 +78,7 @@ class BenchmarkScore:
         Sample Vol. - See `Benchmarker`.
 
         Take the 2nd line for example, it means by running the task
-        Hash128, the mmr3's speed is 1.1 times of mmh3 on average.
+        Hash128, the mmr3's speed is 6.4 times of mmh3 on average.
         """
         cell_sizes = [max(6, len(x) + 2) for x in self._header]
         cell_sizes[0] = MAX_ITEM_LEN
