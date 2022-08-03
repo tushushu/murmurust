@@ -1,4 +1,5 @@
 use pyo3::prelude::*;
+use std::mem;
 
 #[pyfunction]
 fn fmix32(hash: u32) -> u32 {
@@ -23,20 +24,18 @@ fn fmix64(hash: u64) -> u64 {
 }
 
 #[pyfunction(seed = "0", signed = "false")]
-unsafe fn hash32(_py: Python, key: &str, seed: u32, signed: bool) -> Py<PyAny> {
+fn hash32(_py: Python, key: &str, seed: u32, signed: bool) -> Py<PyAny> {
     let len = key.len();
-    let data = key.as_bytes();
+    let bytes = key.as_bytes();
+    let bytes32: &[u32] = unsafe { mem::transmute(bytes) };
     let n_blocks = len / 4;
     let mut h1 = seed;
 
     let c1: u32 = 0xcc9e2d51;
     let c2: u32 = 0x1b873593;
     // body
-    for i in (0..n_blocks * 4).step_by(4) {
-        let mut k1: u32 = (data.get_unchecked(i + 3).wrapping_shl(24)
-            | data.get_unchecked(i + 2).wrapping_shl(16)
-            | data.get_unchecked(i + 1).wrapping_shl(8)
-            | data.get_unchecked(i)) as u32;
+    for i in 0..n_blocks as usize {
+        let mut k1 = bytes32[i];
 
         k1 = k1.wrapping_mul(c1);
         k1 = k1.wrapping_shl(15) | k1.wrapping_shr(17);
@@ -53,13 +52,13 @@ unsafe fn hash32(_py: Python, key: &str, seed: u32, signed: bool) -> Py<PyAny> {
     let tail_len = len & 3;
 
     if tail_len >= 3 {
-        k1 ^= (data[tail_index + 2] as u32).wrapping_shl(16);
+        k1 ^= (bytes[tail_index + 2] as u32).wrapping_shl(16);
     };
     if tail_len >= 2 {
-        k1 ^= (data[tail_index + 1] as u32).wrapping_shl(8);
+        k1 ^= (bytes[tail_index + 1] as u32).wrapping_shl(8);
     };
     if tail_len >= 1 {
-        k1 ^= data[tail_index] as u32;
+        k1 ^= bytes[tail_index] as u32;
     };
     if tail_len > 0 {
         k1 = k1.wrapping_mul(c1);
