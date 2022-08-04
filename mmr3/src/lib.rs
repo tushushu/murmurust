@@ -35,7 +35,7 @@ fn hash32(_py: Python, key: &str, seed: u32, signed: bool) -> Py<PyAny> {
     let c2: u32 = 0x1b873593;
     // body
     for i in 0..n_blocks as usize {
-        let mut k1 = bytes32[i];
+        let mut k1 = unsafe { *bytes32.get_unchecked(i) };
 
         k1 = k1.wrapping_mul(c1);
         k1 = k1.wrapping_shl(15) | k1.wrapping_shr(17);
