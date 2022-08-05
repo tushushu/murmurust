@@ -107,10 +107,7 @@ class Benchmarker(ABC):
 
     and the result of each round and the average result are both recorded.
 
-    The abstract methods need to be overridden by subclass. The tuples in the
-    list returned store the input of each round test. The first element of the
-    tuple should be a list with corresponding size, and the other elements of
-    the tuple should be scalars if needed.
+    The abstract methods need to be overridden by subclass.
     """
 
     def __init__(self) -> None:
