@@ -1,8 +1,19 @@
+import subprocess
 from typing import Any, Dict, Optional
 
 import mmh3
 import pytest
 from mmr3 import fmix32, fmix64, hash32
+
+
+def _get_os_kernel_bit() -> int:
+    process = subprocess.Popen(
+        ['getconf', 'LONG_BIT'],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
+    out, _ = process.communicate()
+    return int(out)
 
 
 def _fmix32(hash: int) -> int:
