@@ -168,7 +168,7 @@ fn hash128_x64(_py: Python, key: &str, seed: u32, signed: bool) -> Py<PyAny> {
         k1 ^= (bytes[tail_index + 1] as u64).wrapping_shl(8);
     };
     if tail_len >= 1 {
-        k1 ^= bytes[tail_index + 0] as u64;
+        k1 ^= bytes[tail_index] as u64;
     };
     if tail_len > 0 {
         k1 = k1.wrapping_mul(c1);
