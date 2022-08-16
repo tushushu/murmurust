@@ -115,23 +115,23 @@ def _hash128_x64(key: str, seed: int, signed: bool) -> int:
 
     # body
     for block_start in range(0, n_blocks * 8, 8):
-        k1 = key[2 * block_start + 7] << 56 | \
-            key[2 * block_start + 6] << 48 | \
-            key[2 * block_start + 5] << 40 | \
-            key[2 * block_start + 4] << 32 | \
-            key[2 * block_start + 3] << 24 | \
-            key[2 * block_start + 2] << 16 | \
-            key[2 * block_start + 1] << 8 | \
-            key[2 * block_start + 0]
+        k1 = data[2 * block_start + 7] << 56 | \
+            data[2 * block_start + 6] << 48 | \
+            data[2 * block_start + 5] << 40 | \
+            data[2 * block_start + 4] << 32 | \
+            data[2 * block_start + 3] << 24 | \
+            data[2 * block_start + 2] << 16 | \
+            data[2 * block_start + 1] << 8 | \
+            data[2 * block_start + 0]
 
-        k2 = key[2 * block_start + 15] << 56 | \
-            key[2 * block_start + 14] << 48 | \
-            key[2 * block_start + 13] << 40 | \
-            key[2 * block_start + 12] << 32 | \
-            key[2 * block_start + 11] << 24 | \
-            key[2 * block_start + 10] << 16 | \
-            key[2 * block_start + 9] << 8 | \
-            key[2 * block_start + 8]
+        k2 = data[2 * block_start + 15] << 56 | \
+            data[2 * block_start + 14] << 48 | \
+            data[2 * block_start + 13] << 40 | \
+            data[2 * block_start + 12] << 32 | \
+            data[2 * block_start + 11] << 24 | \
+            data[2 * block_start + 10] << 16 | \
+            data[2 * block_start + 9] << 8 | \
+            data[2 * block_start + 8]
 
         k1 = (c1 * k1) & 0xFFFFFFFFFFFFFFFF
         k1 = (k1 << 31 | k1 >> 33) & 0xFFFFFFFFFFFFFFFF
@@ -158,19 +158,19 @@ def _hash128_x64(key: str, seed: int, signed: bool) -> int:
     tail_size = length & 15
 
     if tail_size >= 15:
-        k2 ^= key[tail_index + 14] << 48
+        k2 ^= data[tail_index + 14] << 48
     if tail_size >= 14:
-        k2 ^= key[tail_index + 13] << 40
+        k2 ^= data[tail_index + 13] << 40
     if tail_size >= 13:
-        k2 ^= key[tail_index + 12] << 32
+        k2 ^= data[tail_index + 12] << 32
     if tail_size >= 12:
-        k2 ^= key[tail_index + 11] << 24
+        k2 ^= data[tail_index + 11] << 24
     if tail_size >= 11:
-        k2 ^= key[tail_index + 10] << 16
+        k2 ^= data[tail_index + 10] << 16
     if tail_size >= 10:
-        k2 ^= key[tail_index + 9] << 8
+        k2 ^= data[tail_index + 9] << 8
     if tail_size >= 9:
-        k2 ^= key[tail_index + 8]
+        k2 ^= data[tail_index + 8]
 
     if tail_size > 8:
         k2 = (k2 * c2) & 0xFFFFFFFFFFFFFFFF
@@ -179,21 +179,21 @@ def _hash128_x64(key: str, seed: int, signed: bool) -> int:
         h2 ^= k2
 
     if tail_size >= 8:
-        k1 ^= key[tail_index + 7] << 56
+        k1 ^= data[tail_index + 7] << 56
     if tail_size >= 7:
-        k1 ^= key[tail_index + 6] << 48
+        k1 ^= data[tail_index + 6] << 48
     if tail_size >= 6:
-        k1 ^= key[tail_index + 5] << 40
+        k1 ^= data[tail_index + 5] << 40
     if tail_size >= 5:
-        k1 ^= key[tail_index + 4] << 32
+        k1 ^= data[tail_index + 4] << 32
     if tail_size >= 4:
-        k1 ^= key[tail_index + 3] << 24
+        k1 ^= data[tail_index + 3] << 24
     if tail_size >= 3:
-        k1 ^= key[tail_index + 2] << 16
+        k1 ^= data[tail_index + 2] << 16
     if tail_size >= 2:
-        k1 ^= key[tail_index + 1] << 8
+        k1 ^= data[tail_index + 1] << 8
     if tail_size >= 1:
-        k1 ^= key[tail_index + 0]
+        k1 ^= data[tail_index + 0]
 
     if tail_size > 0:
         k1 = (k1 * c1) & 0xFFFFFFFFFFFFFFFF
