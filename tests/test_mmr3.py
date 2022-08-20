@@ -102,16 +102,7 @@ def _hash32(key: str, seed: int, signed: bool) -> int:
     return result
 
 
-def _fmix64(hash: int) -> int:
-    hash ^= hash >> 33
-    hash = (hash * 0xff51afd7ed558ccd) & 0xFFFFFFFFFFFFFFFF
-    hash ^= hash >> 33
-    hash = (hash * 0xc4ceb9fe1a85ec53) & 0xFFFFFFFFFFFFFFFF
-    hash ^= hash >> 33
-    return hash
-
-
-def _hash128_x64(_key: str, seed: int, signed: bool):
+def _hash128_x64(_key: str, seed: int, signed: bool) -> int:
     data = _key.encode()
     length = len(data)
     n_blocks = length // 16
@@ -285,7 +276,7 @@ def test_hash(
     assert result == mmh3.hash(key=key, seed=seed, signed=signed)
 
     # hash128 x64
-    kwargs: Dict[str, Any] = {"key": key}
+    kwargs = {"key": key}
     if seed is None:
         seed = 0
     else:
