@@ -1,7 +1,9 @@
 EXIT_STATUS=0
 
 echo "Running clippy..."
-cargo clippy --manifest-path ../mmr3/Cargo.toml -- -D warnings|| EXIT_STATUS=$?
+# Switch the clippy errors to warnings due to PYO3 bugs.
+# cargo clippy --manifest-path ../mmr3/Cargo.toml -- -D warnings|| EXIT_STATUS=$?
+cargo clippy --manifest-path ../mmr3/Cargo.toml || EXIT_STATUS=$?
 echo "\n"
 
 echo "Running flake8..."
