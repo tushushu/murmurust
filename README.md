@@ -1,9 +1,9 @@
 # murmurust
 [![pypi](https://img.shields.io/pypi/v/mmr3)](https://pypi.org/project/mmr3/)
 [![license](https://img.shields.io/github/license/tushushu/murmurust)](https://github.com/tushushu/murmurust/blob/main/LICENSE)
-[![CI](https://github.com/tushushu/murmurust/workflows/CI/badge.svg)](https://github.com/tushushu/murmurust/workflows/main.yml)
+[![unittest](https://github.com/tushushu/murmurust/workflows/unittest/badge.svg)](https://github.com/tushushu/murmurust/blob/main/.github/workflows/main.yml)
 [![publish](https://github.com/tushushu/murmurust/workflows/publish/badge.svg)](https://github.com/tushushu/murmurust/actions/workflows/publish.yml)
-[![code style](https://img.shields.io/badge/code%20style-flake8-blue)](https://github.com/PyCQA/flake8)
+[![codestyle](https://github.com/tushushu/murmurust/workflows/codestyle/badge.svg)](https://github.com/tushushu/murmurust/blob/main/.github/workflows/codestyle.yml)
 [![downloads](https://pepy.tech/badge/mmr3)](https://pypi.org/project/mmr3/)
 [![downloads/month](https://static.pepy.tech/badge/mmr3/month)](https://pypi.org/project/mmr3/)  
 
