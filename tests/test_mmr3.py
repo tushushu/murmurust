@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional
 
 import mmh3
 import pytest
-from mmr3 import fmix32, fmix64, hash32
+from mmr3 import fmix32, fmix64, hash32, hash128_x64
 
 
 def _get_os_kernel_bit() -> int:
@@ -53,13 +53,13 @@ def test_fmix64(hash: int) -> None:
 def _hash32(key: str, seed: int, signed: bool) -> int:
     data = key.encode()
     length = len(data)
-    n_blocks = int(length / 4)
+    n_blocks = length // 4
 
     h1 = seed
     c1 = 0xcc9e2d51
     c2 = 0x1b873593
 
-    # body
+    # Body
     for i in range(0, n_blocks * 4, 4):
         k1 = data[i + 3] << 24 | \
             data[i + 2] << 16 | \
@@ -102,36 +102,44 @@ def _hash32(key: str, seed: int, signed: bool) -> int:
     return result
 
 
-def _hash128_x64(key: str, seed: int, signed: bool) -> int:
-    data = key.encode()
+def _fmix64(hash: int) -> int:
+    hash ^= hash >> 33
+    hash = (hash * 0xff51afd7ed558ccd) & 0xFFFFFFFFFFFFFFFF
+    hash ^= hash >> 33
+    hash = (hash * 0xc4ceb9fe1a85ec53) & 0xFFFFFFFFFFFFFFFF
+    hash ^= hash >> 33
+    return hash
+
+
+def _hash128_x64(_key: str, seed: int, signed: bool):
+    data = _key.encode()
     length = len(data)
-    n_blocks = int(length / 16)
+    n_blocks = length // 16
 
     h1 = seed
     h2 = seed
-
     c1 = 0x87c37b91114253d5
     c2 = 0x4cf5ad432745937f
 
-    # body
-    for block_start in range(0, n_blocks * 8, 8):
-        k1 = data[2 * block_start + 7] << 56 | \
-            data[2 * block_start + 6] << 48 | \
-            data[2 * block_start + 5] << 40 | \
-            data[2 * block_start + 4] << 32 | \
-            data[2 * block_start + 3] << 24 | \
-            data[2 * block_start + 2] << 16 | \
-            data[2 * block_start + 1] << 8 | \
-            data[2 * block_start + 0]
+    # Body
+    for i in range(0, n_blocks * 8, 8):
+        k1 = data[2 * i + 7] << 56 | \
+            data[2 * i + 6] << 48 | \
+            data[2 * i + 5] << 40 | \
+            data[2 * i + 4] << 32 | \
+            data[2 * i + 3] << 24 | \
+            data[2 * i + 2] << 16 | \
+            data[2 * i + 1] << 8 | \
+            data[2 * i]
 
-        k2 = data[2 * block_start + 15] << 56 | \
-            data[2 * block_start + 14] << 48 | \
-            data[2 * block_start + 13] << 40 | \
-            data[2 * block_start + 12] << 32 | \
-            data[2 * block_start + 11] << 24 | \
-            data[2 * block_start + 10] << 16 | \
-            data[2 * block_start + 9] << 8 | \
-            data[2 * block_start + 8]
+        k2 = data[2 * i + 15] << 56 | \
+            data[2 * i + 14] << 48 | \
+            data[2 * i + 13] << 40 | \
+            data[2 * i + 12] << 32 | \
+            data[2 * i + 11] << 24 | \
+            data[2 * i + 10] << 16 | \
+            data[2 * i + 9] << 8 | \
+            data[2 * i + 8]
 
         k1 = (c1 * k1) & 0xFFFFFFFFFFFFFFFF
         k1 = (k1 << 31 | k1 >> 33) & 0xFFFFFFFFFFFFFFFF
@@ -151,7 +159,7 @@ def _hash128_x64(key: str, seed: int, signed: bool) -> int:
         h2 = (h1 + h2) & 0xFFFFFFFFFFFFFFFF
         h2 = (h2 * 5 + 0x38495ab5) & 0xFFFFFFFFFFFFFFFF
 
-    # tail
+    # Tail
     tail_index = n_blocks * 16
     k1 = 0
     k2 = 0
@@ -193,7 +201,7 @@ def _hash128_x64(key: str, seed: int, signed: bool) -> int:
     if tail_size >= 2:
         k1 ^= data[tail_index + 1] << 8
     if tail_size >= 1:
-        k1 ^= data[tail_index + 0]
+        k1 ^= data[tail_index]
 
     if tail_size > 0:
         k1 = (k1 * c1) & 0xFFFFFFFFFFFFFFFF
@@ -201,7 +209,7 @@ def _hash128_x64(key: str, seed: int, signed: bool) -> int:
         k1 = (k1 * c2) & 0xFFFFFFFFFFFFFFFF
         h1 ^= k1
 
-    # finalization
+    # Finalization
     h1 ^= length
     h2 ^= length
 
@@ -214,7 +222,15 @@ def _hash128_x64(key: str, seed: int, signed: bool) -> int:
     h1 = (h1 + h2) & 0xFFFFFFFFFFFFFFFF
     h2 = (h1 + h2) & 0xFFFFFFFFFFFFFFFF
 
-    return (h2 << 64 | h1)
+    result = h2 << 64 | h1
+
+    if not signed:
+        return result
+    else:
+        if result & 0x80000000000000000000000000000000 == 0:
+            return result
+        else:
+            return -(result ^ 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF) - 1
 
 
 @pytest.mark.parametrize(
@@ -253,6 +269,7 @@ def test_hash(
     seed: Optional[int],
     signed: Optional[bool],
 ) -> None:
+    # hash32
     kwargs: Dict[str, Any] = {"key": key}
     if seed is None:
         seed = 0
@@ -263,12 +280,21 @@ def test_hash(
     else:
         kwargs["signed"] = signed
 
-    # hash32
     result = hash32(**kwargs)
     assert result == _hash32(key, seed, signed)
-    assert result == mmh3.hash(key, seed, signed)
+    assert result == mmh3.hash(key=key, seed=seed, signed=signed)
 
     # hash128 x64
-    result = hash32(**kwargs)
-    assert result == _hash32(key, seed, signed)
-    assert result == mmh3.hash(key, seed, signed)
+    kwargs: Dict[str, Any] = {"key": key}
+    if seed is None:
+        seed = 0
+    else:
+        kwargs["seed"] = seed
+    if signed is None:
+        signed = False
+    else:
+        kwargs["signed"] = signed
+
+    result = hash128_x64(**kwargs)
+    assert result == _hash128_x64(key, seed, signed)
+    assert result == mmh3.hash128(key=key, seed=seed, signed=signed)
