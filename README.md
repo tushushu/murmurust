@@ -43,4 +43,8 @@ Run `pip install mmr3`
 # Return signed int.
 >>> mmr3.hash32('foo', signed=True)
 -156908512
+
+# hash128 for x64 architecture
+>>> mmr3.hash128_x64('foo', seed=20, signed=True)
+-114440907836743398687870327469607863688
 ```
