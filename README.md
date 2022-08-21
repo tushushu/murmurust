@@ -24,9 +24,10 @@ Run `pip install mmr3`
 ## Benchmark
 `mmr3` is faster than `mmh3` on average, which is a popular murmurhash3 library written in C/C++ and Python. For the details, please refer to [benchmark.md](https://github.com/tushushu/murmurust/blob/main/benchmark.md).  
 
-| Item   | XS   | S    | M    | L    | XL   | Average | Faster |
-| ------ | ---- | ---- | ---- | ---- | ---- | ------- | ------ |
-| Hash32 | 2.1x | 2.0x | 1.8x | 1.1x | 0.8x | 1.6x    | Y      |
+| Item    | XS   | S    | M    | L    | XL   | Average | Faster |
+| ------- | ---- | ---- | ---- | ---- | ---- | ------- | ------ |
+| Hash32  | 1.9x | 1.8x | 1.8x | 1.3x | 1.0x | 1.6x    | Y      |
+| Hash128 | 1.9x | 1.9x | 1.8x | 1.5x | 1.0x | 1.6x    | Y      |
 
 
 ## Examples
