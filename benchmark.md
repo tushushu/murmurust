@@ -33,18 +33,19 @@ Hash128, the mmr3's speed is 6.4 times of mmh3 on average.
 
 Info:  
 ************************************************************
-Date: 2022-08-05 14:57:45   
+Date: 2022-08-21 09:47:07   
 System OS: Linux   
-CPU:  Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz   
-Python version: 3.10.5   
-mmr3 version: 1.2.0   
+CPU:  Intel(R) Xeon(R) Platinum 8171M CPU @ 2.60GHz   
+Python version: 3.10.6   
+mmr3 version: 1.3.0   
 mmh3 version: 3.0.0   
 ************************************************************
 
 Result:
 
-| Item   | XS   | S    | M    | L    | XL   | Average | Faster |
-| ------ | ---- | ---- | ---- | ---- | ---- | ------- | ------ |
-| Hash32 | 2.1x | 2.0x | 1.8x | 1.1x | 0.8x | 1.6x    | Y      |
+| Item    | XS   | S    | M    | L    | XL   | Average | Faster |
+| ------- | ---- | ---- | ---- | ---- | ---- | ------- | ------ |
+| Hash32  | 1.9x | 1.8x | 1.8x | 1.3x | 1.0x | 1.6x    | Y      |
+| Hash128 | 1.9x | 1.9x | 1.8x | 1.5x | 1.0x | 1.6x    | Y      |
 
-1 of 1 tasks are faster!
+2 of 2 tasks are faster!

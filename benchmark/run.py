@@ -163,6 +163,14 @@ class Hash32(Benchmarker):
         mmh3.hash(key, signed=False)
 
 
+class Hash128(Benchmarker):
+    def mmr3_fn(self, key: str) -> None:
+        mmr3.hash128_x64(key, seed=0, signed=False)
+
+    def other_fn(self, key: str) -> None:
+        mmh3.hash128(key, seed=0, signed=False)
+
+
 def _get_processor_name() -> str:
     if platform.system() == "Windows":
         return platform.processor()
@@ -202,7 +210,7 @@ def display_result() -> None:
     print()
     n_wins = 0
     total = 0
-    benchmarkers = [Hash32]
+    benchmarkers = [Hash32, Hash128]
     for cls in benchmarkers:
         result = cls().run()
         if total == 0:
