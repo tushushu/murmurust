@@ -76,7 +76,7 @@ fn hash32(_py: Python, key: &str, seed: u32, signed: bool) -> Py<PyAny> {
     }
 }
 
-#[pyfunction]
+#[pyfunction(seed = "0", signed = "false")]
 fn hash128_x64(_py: Python, key: &str, seed: u32, signed: bool) -> Py<PyAny> {
     let len = key.len();
     let bytes = key.as_bytes();
