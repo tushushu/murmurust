@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional
 
 import mmh3
 import pytest
-from mmr3 import fmix32, fmix64, hash32, hash128_x64
+from mmr3 import fmix32, fmix64, hash32, hash128_x64, hash
 
 
 def _get_os_kernel_bit() -> int:
@@ -272,6 +272,7 @@ def test_hash(
         kwargs["signed"] = signed
 
     result = hash32(**kwargs)
+    assert result == hash(32, **kwargs)
     assert result == _hash32(key, seed, signed)
     assert result == mmh3.hash(key=key, seed=seed, signed=signed)
 
@@ -287,5 +288,6 @@ def test_hash(
         kwargs["signed"] = signed
 
     result = hash128_x64(**kwargs)
+    assert result == hash(128, **kwargs)
     assert result == _hash128_x64(key, seed, signed)
     assert result == mmh3.hash128(key=key, seed=seed, signed=signed)
