@@ -1,5 +1,8 @@
 use pyo3::prelude::*;
 use std::mem;
+use numpy::ndarray::{ArrayD, ArrayViewD, ArrayViewMutD};
+use numpy::{IntoPyArray, PyArrayDyn, PyReadonlyArrayDyn};
+
 
 #[pyfunction]
 fn fmix32(hash: u32) -> u32 {
@@ -197,6 +200,10 @@ fn hash128_x64(_py: Python, key: &str, seed: u32, signed: bool) -> Py<PyAny> {
         result.to_object(_py)
     }
 }
+
+#[pyfunction(seed = "0", signed = "false")]
+fn hash_numpy(_py: Python, keys: ArrayViewD<'_, &str>, seed: u32, signed: bool) -> ArrayD<u32> {
+    0
 
 #[pymodule]
 fn mmr3(_py: Python, m: &PyModule) -> PyResult<()> {

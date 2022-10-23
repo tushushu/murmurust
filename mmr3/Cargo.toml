@@ -8,6 +8,9 @@ edition = "2018"
 name = "mmr3"
 crate-type = ["cdylib"]
 
+[dependencies.numpy]
+version = "0.17.2"
+
 [dependencies.pyo3]
 version = "0.16.4"
 features = ["extension-module"]
